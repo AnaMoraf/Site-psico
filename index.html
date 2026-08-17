@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<!-- ⚠️ ESTAS 3 LINHAS PRECISAM FICAR SEMPRE NO COMECINHO.
+     A primeira é o que faz os acentos (á, ç, ã) aparecerem certinho. -->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!--
+╔══════════════════════════════════════════════════════════════════════════════╗
+║  OI, FLAVIA! ESTE É O SEU SITE. BEM-VINDA AO CÓDIGO. 🌿                      ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+  Calma: você NÃO precisa entender de programação pra mexer aqui.
+  Este arquivo é como um caderno. Você só escreve nos lugares marcados.
+
+  ─── COMO USAR ────────────────────────────────────────────────────────────────
+  1. Escreva o que quiser nos lugares marcados com  ✏️ ESCREVA AQUI
+  2. Salve o arquivo:            Ctrl + S
+  3. Abra o "index.html" no navegador (duplo clique) e aperte F5 pra ver.
+
+  ─── ACHAR AS COISAS RÁPIDO ───────────────────────────────────────────────────
+  Aperte Ctrl + F (buscar) e digite uma dessas palavras:
+
+     ESCREVA AQUI      → todos os lugares onde você pode escrever
+     MEUS TEXTOS       → a área do blog (onde ficam os artigos)
+     NOVO TEXTO        → o passo a passo pra criar um artigo novo
+     ÁLBUM             → onde ficam as fotos
+     COLINHA           → lista de "peças" prontas (negrito, foto, citação...)
+     TROCAR O FUNDO    → como trocar a imagem de folhas do fundo
+
+  ─── AS 3 REGRAS DE OURO ──────────────────────────────────────────────────────
+  1. Todo texto que o VS Code pinta de outra cor (os "comentários", como este bloco
+     aqui) é recadinho meu pra você. Isso NÃO aparece no site — pode deixar aí.
+  2. Escreva sempre ENTRE as etiquetas. Exemplo:
+           <p>escreva seu texto bem aqui no meio</p>
+           ↑ abre                              ↑ fecha (a barra / fecha)
+  3. Não mexa nos  class="..."  — é o que deixa o site bonito.
+     Se apagar sem querer: Ctrl + Z desfaz. 😉
+
+  Acentos, ç, emojis: pode usar à vontade, tudo funciona.
+-->
+
+<!-- ✏️ ESCREVA AQUI: o nome que aparece na abinha do navegador -->
+<title>Flavia Moreira</title>
+
+<!-- ✏️ ESCREVA AQUI: a frase que aparece quando alguém compartilha o link -->
+<meta name="description" content="Meu cantinho na internet: psicologia, cultura brasileira e uns textos que eu resolvo escrever.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  /* Daqui pra baixo é "a parte técnica" (cores e fontes do site).
+     Pode pular tudo isso — a parte de escrever começa lá embaixo. */
+  tailwind.config = {
+    theme: {
+      extend: {
+        fontFamily: {
+          sans: ['Poppins', 'Inter', 'system-ui', 'Segoe UI', 'sans-serif'],
+          display: ['Fraunces', 'Georgia', 'serif']
+        },
+        colors: {
+          azul_escuro: '#00008B',
+          areia: '#EFE8DC',   /* bege claro  */
+          barro: '#A8785C',   /* marrom      */
+          musgo: '#000000',   /* preto       */
+          folha: '#7E8E6C',   /* verde claro */
+          tinta: '#33302A',   /* quase preto */
+          suave: '#5C574E'    /* cinza texto */
+        },
+        borderRadius: { '4xl': '2rem', '5xl': '2.75rem' }
+      }
+    }
+  }
+</script>
+
+<style>
+  /* ============================================================
+     🎛️ PAINEL DE CONTROLE DO VIDRO
+     Se quiser mexer na "cara" do site, mude só estes 3 números:
+
+     --vidro-leitosidade : quanto o painel fica esbranquiçado.
+                           0.20 = super transparente (vê muito as folhas)
+                           0.40 = padrão
+                           0.60 = mais fechado (texto mais fácil de ler)
+     --vidro-desfoque    : quanto o fundo borra atrás do painel. (padrão 6px)
+     --vidro-borda       : espessura do anel que distorce nas bordas. (padrão 18px)
+     ============================================================ */
+  :root {
+    --vidro-leitosidade: .40;
+    --vidro-desfoque: 6px;
+    --vidro-borda: 18px;
+  }
+
+  html { scroll-behavior: smooth; }
+  body { background-color: #E3D9C9; color: #33302A; }
+
+  /* ============================================================
+     TROCAR O FUNDO
+     O fundo de folhas é o arquivo  assets/fundo-folhas.svg
+     Quer usar uma FOTO sua de folhas/natureza no lugar?
+       1. coloque a foto na pasta "assets" (ex.: minhas-folhas.jpg)
+       2. troque só o nome na linha do url(...) abaixo
+     ============================================================ */
+  .fundo-natural {
+    position: fixed; inset: 0; z-index: -2;
+    overflow: hidden;              /* segura a folhagem dentro da tela */
+    will-change: transform;        /* esta camada segue o mouse e a rolagem */
+  }
+  .fundo-folhas {
+    position: absolute; inset: -8%;   /* um pouco maior que a tela, pra poder se mexer */
+    background-image: url('./assets/fundo-folhas.svg');
+    background-size: cover;
+    background-position: center;
+    /* respiração: as folhas se movem bem devagar, sem parar */
+    animation: respirar 42s ease-in-out infinite alternate;
+    will-change: transform;
+  }
+  @keyframes respirar {
+    0%   { transform: scale(1.00) translate3d(0, 0, 0); }
+    50%  { transform: scale(1.05) translate3d(-1.2%, .8%, 0); }
+    100% { transform: scale(1.02) translate3d(1.2%, -.8%, 0); }
+  }
+  /* véu bem leve só pra deixar o texto legível por cima das folhas */
+  .fundo-veu {
+    position: fixed; inset: 0; z-index: -1;
+    background:
+      radial-gradient(120% 80% at 80% 0%, rgba(255,250,240,.18), transparent 62%),
+      linear-gradient(180deg, rgba(247,242,233,.10) 0%, rgba(226,216,199,.16) 55%, rgba(150,138,118,.24) 100%);
+  }
+
+  /* ============================================================
+     OS PAINÉIS DE VIDRO
+     Bem transparentes: dá pra ver as folhas atrás.
+     A borda tem um "anel" que distorce o fundo, como vidro de verdade.
+     ============================================================ */
+  .glass {
+    position: relative;
+    background: linear-gradient(140deg,
+      rgba(255,255,255, var(--vidro-leitosidade)),
+      rgba(255,255,255, calc(var(--vidro-leitosidade) * .45)));
+    -webkit-backdrop-filter: blur(var(--vidro-desfoque)) saturate(160%) brightness(1.06);
+    backdrop-filter: blur(var(--vidro-desfoque)) saturate(160%) brightness(1.06);
+    border: 1px solid rgba(255,255,255,.62);
+    box-shadow:
+      0 24px 50px -26px rgba(45,38,28,.50),
+      0 2px 10px -4px rgba(45,38,28,.16),
+      inset 0 1px 0 rgba(255,255,255,.72),
+      inset 0 -1px 0 rgba(255,255,255,.28);
+  }
+  .glass-sutil {
+    position: relative;
+    background: linear-gradient(140deg,
+      rgba(255,255,255, calc(var(--vidro-leitosidade) * .75)),
+      rgba(255,255,255, calc(var(--vidro-leitosidade) * .30)));
+    -webkit-backdrop-filter: blur(calc(var(--vidro-desfoque) - 1px)) saturate(150%) brightness(1.05);
+    backdrop-filter: blur(calc(var(--vidro-desfoque) - 1px)) saturate(150%) brightness(1.05);
+    border: 1px solid rgba(255,255,255,.52);
+    box-shadow: 0 18px 38px -22px rgba(45,38,28,.42), inset 0 1px 0 rgba(255,255,255,.6);
+  }
+
+  /* o "anel" de refração: só as bordas distorcem o que está atrás.
+     é isso que dá a sensação de vidro grosso quando a página se mexe. */
+  @supports ((-webkit-mask-composite: xor) or (mask-composite: exclude)) {
+    .glass::before, .glass-sutil::before {
+      content: ''; position: absolute; inset: 0; z-index: -1;
+      border-radius: inherit; pointer-events: none;
+      padding: var(--vidro-borda);         /* espessura da borda que distorce */
+      -webkit-backdrop-filter: blur(10px) saturate(180%);
+      backdrop-filter: blur(10px) saturate(180%);
+      -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+      -webkit-mask-composite: xor;
+              mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+              mask-composite: exclude;
+      transition: padding .6s cubic-bezier(.22,.9,.28,1),
+                  backdrop-filter .6s ease, -webkit-backdrop-filter .6s ease;
+    }
+    /* ao passar o mouse, o vidro "engrossa" e distorce um pouco mais */
+    .glass:hover::before, .glass-sutil:hover::before {
+      padding: calc(var(--vidro-borda) + 8px);
+      -webkit-backdrop-filter: blur(14px) saturate(200%);
+      backdrop-filter: blur(14px) saturate(200%);
+    }
+  }
+
+  .glass-hover {
+    transition: transform .55s cubic-bezier(.22,.9,.28,1),
+                box-shadow .55s cubic-bezier(.22,.9,.28,1),
+                background .55s ease, border-color .55s ease;
+  }
+  .glass-hover:hover {
+    transform: translateY(-6px);
+    background: linear-gradient(140deg, rgba(255,255,255,.48), rgba(255,255,255,.24));
+    border-color: rgba(255,255,255,.8);
+    box-shadow: 0 36px 62px -28px rgba(45,38,28,.52), inset 0 1px 0 rgba(255,255,255,.8);
+  }
+
+  /* ============================================================
+     OS ÍCONES (as carinhas/emojis dentro dos quadradinhos)
+     Passar o mouse = pula e inclina. Clicar = dá um pulinho.
+     ============================================================ */
+  .icone {
+    cursor: pointer;
+    -webkit-user-select: none; user-select: none;
+    transition: transform .5s cubic-bezier(.34,1.56,.64,1),
+                background-color .5s ease, box-shadow .5s ease;
+  }
+  .icone:hover {
+    transform: translateY(-5px) rotate(-8deg) scale(1.14);
+    box-shadow: 0 14px 24px -14px rgba(45,38,28,.55);
+  }
+  .icone:active { transform: scale(.9) rotate(6deg); transition-duration: .12s; }
+  /* quando o card inteiro recebe o mouse, o ícone acompanha */
+  .glass-hover:hover .icone { transform: translateY(-4px) rotate(-6deg) scale(1.08); }
+  /* pulinho ao clicar (o JS lá embaixo liga e desliga esta classe) */
+  .icone.pulou { animation: pulo .65s cubic-bezier(.34,1.56,.64,1); }
+  @keyframes pulo {
+    0%   { transform: scale(.88) rotate(0deg); }
+    35%  { transform: translateY(-12px) scale(1.2) rotate(-12deg); }
+    65%  { transform: translateY(0) scale(.97) rotate(7deg); }
+    100% { transform: none; }
+  }
+
+  /* ---------- Fotos estilo polaroid tortinha ---------- */
+  .foto-torta { transition: transform .6s cubic-bezier(.22,.9,.28,1), box-shadow .6s ease; }
+  .torta-1 { transform: rotate(-2deg); }
+  .torta-2 { transform: rotate(1.6deg); }
+  .torta-3 { transform: rotate(-1.2deg); }
+  .torta-4 { transform: rotate(2.2deg); }
+  .torta-5 { transform: rotate(-1.8deg); }
+  .torta-6 { transform: rotate(1.2deg); }
+  .foto-torta:hover { transform: rotate(0deg) translateY(-8px) scale(1.015); }
+
+  /* ---------- Revelação suave ao rolar ---------- */
+  /* usa a propriedade "translate" (e não transform) para não brigar
+     com a inclinação das fotos nem com o hover dos cards */
+  .revelar {
+    opacity: 0; translate: 0 26px;
+    transition: opacity 1s cubic-bezier(.22,.9,.28,1), translate 1s cubic-bezier(.22,.9,.28,1);
+  }
+  .revelar.visivel { opacity: 1; translate: 0 0; }
+
+  .flutua { animation: flutua 9s ease-in-out infinite; }
+  @keyframes flutua {
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(-10px); }
+  }
+
+  .link-menu { position: relative; }
+  .link-menu::after {
+    content: ''; position: absolute; left: 50%; bottom: -4px;
+    width: 0; height: 1.5px; background: #5F7357; border-radius: 2px;
+    transform: translateX(-50%); transition: width .45s cubic-bezier(.22,.9,.28,1);
+  }
+  .link-menu:hover::after { width: 70%; }
+
+  /* ============================================================
+     AS "PEÇAS" QUE VOCÊ PODE USAR DENTRO DOS SEUS TEXTOS
+     (parágrafo, subtítulo, foto no meio do texto e citação)
+     Veja a COLINHA lá na área MEUS TEXTOS.
+     ============================================================ */
+  .prosa p { margin-top: 1.05rem; line-height: 1.85; }
+  .prosa p:first-child { margin-top: 0; }
+
+  .subtitulo {                      /* <h4 class="subtitulo">  */
+    margin-top: 2rem; margin-bottom: .25rem;
+    font-family: 'Fraunces', Georgia, serif;
+    font-size: 1.25rem; font-weight: 400; color: #33302A;
+  }
+  .citacao {                        /* <blockquote class="citacao"> */
+    margin: 1.6rem 0; padding: .2rem 0 .2rem 1.1rem;
+    border-left: 3px solid rgba(95,115,87,.5);
+    font-family: 'Fraunces', Georgia, serif;
+    font-size: 1.1rem; line-height: 1.7; color: #45413a;
+  }
+  .minha-foto {                     /* <img class="minha-foto"> */
+    display: block; width: 100%; margin: 1.6rem 0 .5rem;
+    border-radius: 1.5rem; border: 1px solid rgba(255,255,255,.55);
+    box-shadow: 0 18px 38px -22px rgba(45,38,28,.5);
+    transition: transform .6s cubic-bezier(.22,.9,.28,1);
+  }
+  .minha-foto:hover { transform: scale(1.012); }
+  .legenda-foto {                   /* <p class="legenda-foto"> */
+    margin-top: .4rem; font-size: .8rem; color: #6b6459; text-align: center;
+  }
+
+  ::selection { background: rgba(95,115,87,.25); }
+
+  /* respeita quem prefere menos animação no computador/celular */
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .revelar { opacity: 1; translate: none; transition: none; }
+    .flutua { animation: none; }
+    .foto-torta, .foto-torta:hover { transform: none; }
+    .icone:hover, .icone:active { transform: none; }
+    .fundo-folhas { animation: none; }
+  }
+</style>
+
+<noscript>
+  <style>.revelar { opacity: 1; translate: none; }</style>
+</noscript>
+</head>
+
+<body class="font-sans antialiased text-tinta">
+
+  <!-- as camadas do fundo (folhas + véu). não precisa mexer -->
+  <div class="fundo-natural" aria-hidden="true">
+    <div class="fundo-folhas"></div>
+  </div>
+  <div class="fundo-veu" aria-hidden="true"></div>
+
+
+  <!-- ══════════════════════════════════════════════════════════════
+       MENU DE CIMA
+       ✏️ Para renomear um item do menu, troque só a palavra
+          entre  >  e  </a>  (ex.: trocar "Fotos" por "Álbum").
+       ══════════════════════════════════════════════════════════════ -->
+  <header class="sticky top-0 z-50 px-4 pt-4 sm:pt-6">
+    <nav class="glass mx-auto flex max-w-5xl items-center justify-between gap-4 rounded-full px-5 py-3 sm:px-7">
+      <a href="#inicio" class="font-display text-lg tracking-tight text-tinta sm:text-xl">
+        Flavia <span class="text-cinza_suave">Moreira</span>
+      </a>
+      <ul class="flex items-center gap-5 text-xs text-suave sm:gap-7 sm:text-sm">
+        <li><a href="#sobre"  class="link-menu transition-colors hover:text-musgo">Sobre mim</a></li>
+        <li><a href="#album"  class="link-menu transition-colors hover:text-musgo">Fotos</a></li>
+        <li><a href="#textos" class="link-menu transition-colors hover:text-musgo">Textos</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="mx-auto max-w-6xl px-4 sm:px-6">
+
+    <!-- ══════════════════════════════════════════════════════════════
+         TOPO DO SITE — sua foto + sua apresentação
+         ══════════════════════════════════════════════════════════════ -->
+    <section id="inicio" class="grid items-center gap-6 py-10 sm:gap-8 sm:py-16 lg:grid-cols-[minmax(0,22rem)_minmax(0,1fr)] lg:gap-10">
+
+      <!-- Sua foto principal.
+           ✏️ Para trocar: coloque a foto nova na pasta do site e escreva
+              o nome dela em src="./NOME-DA-FOTO.jpg" -->
+      <div class="revelar flutua glass rounded-5xl p-3 sm:p-4">
+        <img src="./foto_flavia.jpg"
+             alt="Eu, Flavia, em um retrato em casa"
+             class="aspect-[4/5] w-full rounded-4xl object-cover object-center transition-all duration-700 hover:scale-[1.015]">
+        <!-- ✏️ ESCREVA AQUI: a legendinha embaixo da foto -->
+        <p class="pt-3 text-center text-[11px] uppercase tracking-[0.22em] text-suave/80">
+          Porto Velho &middot; Rondônia
+        </p>
+      </div>
+
+      <!-- Painel da apresentação -->
+      <div class="revelar glass rounded-5xl p-7 sm:p-10">
+        <span class="inline-flex items-center gap-2 rounded-full bg-white/40 px-3.5 py-1.5 text-[11px] uppercase tracking-[0.18em] text-suave">
+          <span class="h-1.5 w-1.5 rounded-full bg-azul_escuro"></span> Psicologia &middot; 6º período
+        </span>
+
+        <!-- ✏️ ESCREVA AQUI: o título grandão -->
+        <h1 class="mt-5 font-display text-4xl font-light leading-[1.1] tracking-tight text-tinta sm:text-5xl">
+          Olá, sou a Flavia.
+        </h1>
+
+        <!-- ✏️ ESCREVA AQUI: sua apresentação.
+             Cada <p> ... </p> é um parágrafo.
+             Quer um parágrafo novo? Copie uma linha inteira <p>...</p> e cole embaixo. -->
+        <div class="mt-5 space-y-4 text-[15px] leading-relaxed text-suave sm:text-base">
+          <p>
+            Sou estudante de Psicologia da faculdade São Lucas, Curto muito meu curso e as histórias que ele proporciona. O que me pegou de vez foi a
+            <strong class="font-medium text-tinta">psicologia clínica</strong>: me fascina entender
+            a mente humana e como cada pessoa funciona de um jeito completamente diferente.
+          </p>
+          <p>
+            Moro em <strong class="font-medium text-tinta">Porto Velho, Rondônia</strong>, mas sou
+            curiosa pelo Brasil inteiro — e o <strong class="font-medium text-tinta">Nordeste</strong>
+            tem um lugar cativo aqui. Minha família é do Ceará, então forró, sotaque e comida boa
+           combinam comigo.
+          </p>
+          <p>
+            Divido a casa com dois Salsichas: o <strong class="font-medium text-tinta">Pindoba</strong>
+            e a <strong class="font-medium text-tinta">Café</strong>. Eu amo os dois de um jeito
+            provavelmente exagerado.
+          </p>
+          <p>
+            Este site é só o meu cantinho: umas fotos, umas ideias e os textos que eu resolvo escrever
+            quando não consigo parar de pensar em alguma coisa.
+          </p>
+        </div>
+
+        <div class="mt-7 flex flex-wrap gap-3">
+          <a href="#textos"
+             class="rounded-full bg-tinta/90 px-6 py-3 text-sm font-medium text-areia shadow-lg shadow-tinta/20 transition-all duration-500 hover:-translate-y-0.5 hover:bg-tinta">
+            Ir para os textos
+          </a>
+          <a href="#album"
+             class="glass-sutil glass-hover rounded-full px-6 py-3 text-sm font-medium text-tinta">
+            Ver as fotos
+          </a>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ══════════════════════════════════════════════════════════════
+         SOBRE MIM — os três cardzinhos com ícone
+         ✏️ Para trocar o ícone: troque o emoji (🐾) por outro.
+            No Windows: tecla Windows + . abre a lista de emojis.
+         ✏️ Para criar um card novo: copie de <article ...> até </article>
+            e cole logo abaixo.
+         ══════════════════════════════════════════════════════════════ -->
+    <section id="sobre" class="scroll-mt-28 py-6 sm:py-10">
+      <div class="revelar mb-7 max-w-2xl">
+        <h2 class="font-display text-3xl font-light tracking-tight text-tinta sm:text-4xl">
+          Coisas que ocupam minha cabeça
+        </h2>
+        <p class="mt-3 text-[15px] leading-relaxed text-suave">
+          
+        </p>
+      </div>
+
+      <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+
+        <article class="revelar glass glass-hover rounded-4xl p-7">
+          <div class="icone flex h-11 w-11 items-center justify-center rounded-2xl bg-folha/20 text-xl">🐾</div>
+          <h3 class="mt-5 font-display text-xl text-tinta">Pindoba &amp; Café</h3>
+          <p class="mt-3 text-sm leading-relaxed text-suave">
+            Meus dois salsichas. Eu amo esses cachorros de um jeito difícil de explicar em voz alta
+            sem passar vergonha. São leais até o osso: me seguem até o banheiro, dormem colados
+            e ficam esperando na porta como se eu tivesse viajado por um ano.
+      
+          </p>
+        </article>
+
+        <article class="revelar glass glass-hover rounded-4xl p-7">
+          <div class="icone flex h-11 w-11 items-center justify-center rounded-2xl bg-musgo/15 text-xl">🧠</div>
+          <h3 class="mt-5 font-display text-xl text-tinta">Psicologia clínica</h3>
+          <p class="mt-3 text-sm leading-relaxed text-suave">
+            É onde eu quero estar. Acho fascinante que duas pessoas possam viver a mesma coisa
+            e sair de lá com histórias completamente diferentes. Passo mais tempo do que deveria
+            pensando nisso — e agora escrevo sobre isso aqui.
+          </p>
+        </article>
+
+        <article class="revelar glass glass-hover rounded-4xl p-7">
+          <div class="icone flex h-11 w-11 items-center justify-center rounded-2xl bg-barro/15 text-xl">🪘</div>
+          <h3 class="mt-5 font-display text-xl text-tinta">Brasil, com sotaque nordestino</h3>
+          <p class="mt-3 text-sm leading-relaxed text-suave">
+            Moro no Norte, mas puxo pro Nordeste. Gosto de música, de sotaque,
+            de comida com nome esquisito e de gente que conta história com as mãos.
+          </p>
+        </article>
+
+        <article class="revelar glass glass-hover rounded-4xl p-7 sm:col-span-2 lg:col-span-3">
+          <div class="icone flex h-11 w-11 items-center justify-center rounded-2xl bg-folha/20 text-xl">🧳</div>
+          <h3 class="mt-5 font-display text-xl text-tinta">Vontade de pegar a estrada de novo</h3>
+          <p class="mt-3 text-sm leading-relaxed text-suave">
+            Desde a viagem pra Ouro Preto do Oeste, no comecinho de 2026, eu e o Arthur não
+            largamos mais o assunto: os dois querendo muito viajar de novo. Não importa muito
+            pra onde — pode ser uma cidade pequena, uma praça, uma ponte esquisita.
+            O plano é só sair daqui um pouco e voltar com fotos e histórias novas.
+          </p>
+        </article>
+      </div>
+    </section>
+
+
+    <!-- ══════════════════════════════════════════════════════════════
+         ÁLBUM DE FOTOS
+         ✏️ COMO ADICIONAR UMA FOTO NOVA:
+            1. Coloque o arquivo da foto na MESMA PASTA do index.html
+               (dica: use nomes simples, sem espaço e sem acento — ex.: praia2026.jpg)
+            2. Copie um bloco inteiro, de <figure ...> até </figure>
+            3. Cole logo abaixo e troque:
+                 • src="./NOME-DA-FOTO.jpg"   → o nome do arquivo
+                 • alt="..."                  → o que aparece na foto (pra acessibilidade)
+                 • o texto do <figcaption>    → sua legenda
+         ✏️ As classes torta-1, torta-2... só mudam pra que lado a foto fica tortinha.
+         ══════════════════════════════════════════════════════════════ -->
+    <section id="album" class="scroll-mt-28 py-6 sm:py-10">
+      <div class="revelar mb-7 max-w-2xl">
+        <h2 class="font-display text-3xl font-light tracking-tight text-tinta sm:text-4xl">
+          O álbum
+        </h2>
+        <p class="mt-3 text-[15px] leading-relaxed text-suave">
+          Umas fotos minhas espalhadas por aqui, com legenda honesta — e uma vontade
+          nada discreta de pegar a estrada de novo.
+        </p>
+      </div>
+
+      <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+
+        <figure class="revelar glass foto-torta torta-1 rounded-4xl p-3 sm:p-4">
+          <img src="./espelhoo.jpeg" alt="Selfie no espelho antes de sair para a faculdade"
+               class="aspect-[3/4] w-full rounded-3xl object-cover">
+          <figcaption class="px-1 pt-3 text-sm leading-relaxed text-suave">
+            Pronta pra mais um seminário de psicanálise :)
+          </figcaption>
+        </figure>
+
+        <figure class="revelar glass foto-torta torta-2 rounded-4xl p-3 sm:p-4">
+          <img src="./tablet-leitura.webp" alt=""
+               class="aspect-[3/4] w-full rounded-3xl object-cover object-top">
+          <figcaption class="px-1 pt-3 text-sm leading-relaxed text-suave">
+            
+          </figcaption>
+        </figure>
+
+        <figure class="revelar glass foto-torta torta-3 rounded-4xl p-3 sm:p-4">
+          <img src="./foto_ceara.jpg" alt="Eu visitando minha família no Ceará"
+               class="aspect-[3/4] w-full rounded-3xl object-cover">
+          <figcaption class="px-1 pt-3 text-sm leading-relaxed text-suave">
+            Ceará, visitando a família. uma mistura de dores de cabeça e amores do coração.
+            Amo aquele lugar, mas viajar as vezes cansa.
+          </figcaption>
+        </figure>
+
+        <figure class="revelar glass foto-torta torta-4 rounded-4xl p-3 sm:p-4 sm:col-span-2 lg:col-span-3">
+          <img src="./foto_shopping.jpg" alt="Eu beijando o Arthur no shopping"
+               class="aspect-[16/9] w-full rounded-3xl object-cover object-center sm:aspect-[21/9]">
+          <figcaption class="px-1 pt-3 text-sm leading-relaxed text-suave">
+            Passeio no shopping com o Arthur. Ele fez essa cara o tempo todo, mas continua comigo —
+            então tecnicamente eu ganhei.
+          </figcaption>
+        </figure>
+
+        <!-- FOTO NOVA: o sorvete do Arthur -->
+        <figure class="revelar glass foto-torta torta-5 rounded-4xl p-3 sm:p-4">
+          <img src="./folhas eu.jpeg" alt="Eu entregando ao Arthur o sorvete que comprei pra ele"
+               class="aspect-[3/4] w-full rounded-3xl object-cover">
+          <figcaption class="px-1 pt-3 text-sm leading-relaxed text-suave">
+            Dia de "sessão" de fotos para o perfil <3
+          </figcaption>
+        </figure>
+
+        <!-- FOTO NOVA: a praça em Ouro Preto do Oeste -->
+        <figure class="revelar glass foto-torta torta-6 rounded-4xl p-3 sm:p-4 sm:col-span-2">
+          <img src="./foto_ouropreto.jpg" alt="Eu e o Arthur na ponte de uma praça em Ouro Preto do Oeste"
+               class="aspect-[4/3] w-full rounded-3xl object-cover object-center sm:aspect-[16/10]">
+          <figcaption class="px-1 pt-3 text-sm leading-relaxed text-suave">
+            Começo de 2026, passeando numa praça em Ouro Preto do Oeste. Ficamos um tempão
+            naquela ponte vermelha vendo o lago. Saímos de lá já querendo viajar de novo —
+            eu e ele, os dois com a mesma vontade.
+          </figcaption>
+        </figure>
+      </div>
+    </section>
+
+
+    <!-- ══════════════════════════════════════════════════════════════
+         ★★★  MEUS TEXTOS  ★★★  (a parte mais importante pra você)
+         ══════════════════════════════════════════════════════════════
+
+         Cada texto do blog é um bloco que começa em  <article  e termina em  </article>.
+
+         ┌─ NOVO TEXTO — passo a passo ────────────────────────────────┐
+         │ 1. Desça até o texto de exemplo (o painel grande abaixo).    │
+         │ 2. Selecione TUDO desde a linha  <article ...>               │
+         │    até a linha  </article>  e copie (Ctrl+C).                │
+         │ 3. Cole (Ctrl+V) logo depois do </article>.                  │
+         │ 4. No bloco novo troque: a etiqueta, a data, o título        │
+         │    e os parágrafos. Pronto, é um texto novo.                 │
+         │ 5. Textos mais novos em cima; os antigos vão descendo.       │
+         └─────────────────────────────────────────────────────────────┘
+
+         ┌─ COLINHA — peças que você pode colar DENTRO de um texto ─────┐
+         │  Parágrafo:                                                  │
+         │     <p>seu parágrafo aqui</p>                                │
+         │                                                              │
+         │  Negrito:            <strong>palavra</strong>                │
+         │  Itálico:            <em>palavra</em>                        │
+         │                                                              │
+         │  Subtítulo (divide o texto em partes):                       │
+         │     <h4 class="subtitulo">nome da parte</h4>                 │
+         │                                                              │
+         │  Citação (frase destacada com risquinho na lateral):         │
+         │     <blockquote class="citacao">a frase</blockquote>         │
+         │                                                              │
+         │  Foto no meio do texto (com legenda):                        │
+         │     <img class="minha-foto" src="./sua-foto.jpg" alt="o que aparece na foto"> │
+         │     <p class="legenda-foto">legenda da foto</p>              │
+         └─────────────────────────────────────────────────────────────┘
+         ══════════════════════════════════════════════════════════════ -->
+    <section id="textos" class="scroll-mt-28 py-6 sm:py-12">
+
+      <div class="revelar mb-7 flex flex-wrap items-end justify-between gap-4">
+        <div class="max-w-2xl">
+          <h2 class="font-display text-3xl font-light tracking-tight text-tinta sm:text-4xl">
+            Textos
+          </h2>
+          <p class="mt-3 text-[15px] leading-relaxed text-suave">
+            Aqui eu escrevo de verdade: textos longos, sem pressa, sobre o que eu ando pensando.
+            Psicologia, cultura, cachorro, vida. Às vezes tudo junto no mesmo parágrafo.
+          </p>
+        </div>
+        <span class="icone glass-sutil rounded-full px-4 py-2 text-xs tracking-wide text-suave">rascunhando 🖊️</span>
+      </div>
+
+
+      <!-- ╔═══════════════════════════════════════════════════════════╗
+           ║  COMEÇO DE UM TEXTO — copie deste <article> até </article> ║
+           ╚═══════════════════════════════════════════════════════════╝ -->
+      <article class="revelar glass mb-5 rounded-5xl p-7 sm:p-10">
+
+        <!-- Linha de cima: assunto, data e tempo de leitura.
+             ✏️ ESCREVA AQUI (troque as palavras entre > e </span>) -->
+        <div class="flex flex-wrap items-center gap-3 text-[11px] uppercase tracking-[0.16em] text-suave/90">
+          <span class="rounded-full bg-musgo/15 px-3 py-1 text-musgo">Psicologia</span>
+          <span>em breve</span>
+          <span aria-hidden="true">•</span>
+          <span>uns 6 minutos de leitura</span>
+        </div>
+
+        <!-- ✏️ ESCREVA AQUI: o título do texto -->
+        <h3 class="mt-5 font-display text-2xl font-light leading-tight text-tinta sm:text-3xl">
+          Sobre escutar gente sem já ter a resposta pronta
+        </h3>
+
+        <!-- ✏️ ESCREVA AQUI: o texto em si.
+             Cada <p> ... </p> é um parágrafo.
+             Precisa de mais um? Copie uma linha <p>...</p> inteira e cole embaixo. -->
+        <div class="prosa mt-5 max-w-3xl text-[15px] text-suave sm:text-base">
+          <p>
+            Este é o espaço do texto principal. É aqui que eu vou escrever com calma, no formato
+            que eu mais gosto: um parágrafo puxando o outro, sem tópico, sem lista, sem pressa.
+          </p>
+          <p>
+            Enquanto o primeiro não sai, deixo o assunto anotado: quero falar sobre a diferença
+            entre ouvir alguém e esperar a pessoa terminar de falar. Sobre como a faculdade me
+            ensinou a segurar a vontade de resolver a vida dos outros em três frases.
+            E sobre como eu ainda erro nisso, principalmente com quem eu amo.
+          </p>
+        </div>
+
+        <!-- ✏️ ESCREVA AQUI: a assinatura/data do fim do texto -->
+        <p class="mt-6 text-xs text-suave/70">
+          Publicado por mim, quando eu terminar de escrever.
+        </p>
+      </article>
+      <!-- ╔═══════════════════════════════════════════════════════════╗
+           ║  FIM DO TEXTO — cole o texto novo logo AQUI EMBAIXO 👇     ║
+           ╚═══════════════════════════════════════════════════════════╝ -->
+
+
+      <!-- ══════════════════════════════════════════════════════════════
+           IDEIAS DE TEXTO (cardzinhos menores, só com título e resumo)
+           ✏️ Para criar outro: copie de <article ...> até </article>.
+           ══════════════════════════════════════════════════════════════ -->
+      <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+
+        <article class="revelar glass glass-hover flex flex-col rounded-4xl p-7">
+          <div class="flex items-center justify-between">
+            <span class="rounded-full bg-barro/15 px-3 py-1 text-[11px] uppercase tracking-[0.16em] text-barro">Cultura</span>
+            <span class="text-[11px] text-suave/70">em breve</span>
+          </div>
+          <h3 class="mt-5 font-display text-xl leading-snug text-tinta">
+            Por que eu choro com forró
+          </h3>
+          <p class="mt-3 flex-1 text-sm leading-relaxed text-suave">
+            Um texto sobre saudade de um lugar onde eu não moro, sotaque herdado
+            e comida de família como memória afetiva.
+          </p>
+        </article>
+
+        <article class="revelar glass glass-hover flex flex-col rounded-4xl p-7">
+          <div class="flex items-center justify-between">
+            <span class="rounded-full bg-folha/20 px-3 py-1 text-[11px] uppercase tracking-[0.16em] text-folha">Vida</span>
+            <span class="text-[11px] text-suave/70">em breve</span>
+          </div>
+          <h3 class="mt-5 font-display text-xl leading-snug text-tinta">
+            Estudar com dois salsichas em cima do caderno
+          </h3>
+          <p class="mt-3 flex-1 text-sm leading-relaxed text-suave">
+            Crônica da minha rotina: café, resumo pela metade, Pindoba latindo pro nada
+            e a Café dormindo exatamente em cima da página que eu preciso ler.
+          </p>
+        </article>
+
+        <article class="revelar glass glass-hover flex flex-col rounded-4xl p-7 sm:col-span-2 lg:col-span-1">
+          <div class="flex items-center justify-between">
+            <span class="rounded-full bg-musgo/15 px-3 py-1 text-[11px] uppercase tracking-[0.16em] text-musgo">Psicologia</span>
+            <span class="text-[11px] text-suave/70">em breve</span>
+          </div>
+          <h3 class="mt-5 font-display text-xl leading-snug text-tinta">
+            Coisas que a graduação não avisa
+          </h3>
+          <p class="mt-3 flex-1 text-sm leading-relaxed text-suave">
+            Anotações de quem está no meio do curso e descobriu que estudar a mente humana
+            mexe bastante com a própria.
+          </p>
+        </article>
+      </div>
+
+      <!-- espaço reservado para novos textos -->
+      <div class="revelar glass-sutil mt-5 flex flex-col items-center justify-center gap-2 rounded-4xl border-dashed p-10 text-center">
+        <span class="icone text-2xl">✍️</span>
+        <p class="font-display text-lg text-tinta">Espaço reservado pro próximo texto</p>
+        <p class="max-w-md text-sm leading-relaxed text-suave">
+          Quando eu escrever, ele entra aqui — é só duplicar um dos cards de cima.
+        </p>
+      </div>
+    </section>
+
+  </main>
+
+
+  <!-- ══════════════════════════════════════════════════════════════
+       RODAPÉ ✏️ (o ano se atualiza sozinho, não precisa mexer)
+       ══════════════════════════════════════════════════════════════ -->
+  <footer class="px-4 pb-8 sm:px-6">
+    <div class="glass-sutil mx-auto flex max-w-6xl flex-col items-center justify-between gap-2 rounded-4xl px-6 py-5 text-center text-xs text-suave sm:flex-row sm:text-left">
+      <p>© <span id="ano">2026</span> Flavia Moreira — escrito em Porto Velho, RO.</p>
+      <p>Psicologia · Nordeste no coração · Pindoba &amp; Café 🐾</p>
+    </div>
+  </footer>
+
+
+<script>
+  /* ══════════════════════════════════════════════════════════════
+     Daqui pra baixo é o "motorzinho" das animações.
+     Você não precisa mexer em nada aqui. 🙂
+     ══════════════════════════════════════════════════════════════ */
+
+  // ano do rodapé sempre atualizado
+  document.getElementById('ano').textContent = new Date().getFullYear();
+
+  const menosMovimento = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // ---- blocos aparecendo suavemente conforme a página rola ----
+  const alvos = document.querySelectorAll('.revelar');
+  const mostrarTudo = () => alvos.forEach(alvo => alvo.classList.add('visivel'));
+
+  if ('IntersectionObserver' in window) {
+    const observador = new IntersectionObserver((entradas) => {
+      entradas.forEach((entrada, i) => {
+        if (entrada.isIntersecting) {
+          setTimeout(() => entrada.target.classList.add('visivel'), i * 90);
+          observador.unobserve(entrada.target);
+        }
+      });
+    }, { threshold: 0.05, rootMargin: '0px 0px -6% 0px' });
+    alvos.forEach(alvo => observador.observe(alvo));
+
+    // redes de segurança: nada pode ficar invisível.
+    const revelarOQueJaPassou = () => {
+      alvos.forEach(alvo => {
+        if (alvo.getBoundingClientRect().top < window.innerHeight) {
+          alvo.classList.add('visivel');
+          observador.unobserve(alvo);
+        }
+      });
+    };
+    window.addEventListener('load', revelarOQueJaPassou);
+    setTimeout(revelarOQueJaPassou, 400);
+    setTimeout(mostrarTudo, 2500);
+  } else {
+    mostrarTudo();
+  }
+
+  // ---- pulinho ao clicar nos ícones ----
+  document.querySelectorAll('.icone').forEach(icone => {
+    icone.addEventListener('click', () => {
+      icone.classList.remove('pulou');
+      void icone.offsetWidth;            // reinicia a animação se clicar rápido
+      icone.classList.add('pulou');
+    });
+    icone.addEventListener('animationend', () => icone.classList.remove('pulou'));
+  });
+
+  // ---- o fundo de folhas se move devagarinho (rolagem + mouse) ----
+  // é esse movimento que faz as bordas dos painéis de vidro "deformarem".
+  const fundo = document.querySelector('.fundo-natural');
+  let alvoX = 0, alvoY = 0, atualX = 0, atualY = 0, animando = false;
+
+  const animarFundo = () => {
+    atualX += (alvoX - atualX) * 0.06;
+    atualY += (alvoY - atualY) * 0.06;
+    fundo.style.transform = `translate3d(${atualX.toFixed(2)}px, ${atualY.toFixed(2)}px, 0)`;
+    if (Math.abs(alvoX - atualX) > 0.1 || Math.abs(alvoY - atualY) > 0.1) {
+      requestAnimationFrame(animarFundo);
+    } else {
+      animando = false;
+    }
+  };
+
+  const pedirAnimacao = () => {
+    if (!animando) { animando = true; requestAnimationFrame(animarFundo); }
+  };
+
+  if (!menosMovimento && fundo) {
+    let deslocamentoRolagem = 0, deslocamentoMouseX = 0, deslocamentoMouseY = 0;
+
+    window.addEventListener('scroll', () => {
+      deslocamentoRolagem = -window.scrollY * 0.05;
+      alvoY = deslocamentoRolagem + deslocamentoMouseY;
+      pedirAnimacao();
+    }, { passive: true });
+
+    window.addEventListener('mousemove', (evento) => {
+      deslocamentoMouseX = (evento.clientX / window.innerWidth  - 0.5) * 26;
+      deslocamentoMouseY = (evento.clientY / window.innerHeight - 0.5) * 16;
+      alvoX = deslocamentoMouseX;
+      alvoY = deslocamentoRolagem + deslocamentoMouseY;
+      pedirAnimacao();
+    }, { passive: true });
+  }
+</script>
+</body>
+</html>
